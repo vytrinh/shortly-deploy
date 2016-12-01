@@ -44,6 +44,11 @@ module.exports = function(grunt) {
     },
 
     cssmin: {
+      my_target: {
+        files: {
+          'public/lib/style.min.css': ['public/lib/style.css']
+        }
+      }
     },
 
     watch: {
@@ -64,9 +69,16 @@ module.exports = function(grunt) {
     },
 
     shell: {
-      prodServer: {
+      add: {
+        command: 'git add .'
+      }, 
+      commit: {
+        command: 'git commit -m "Push to production"'
+      },
+      push: {
+        command: 'git push live master'
       }
-    },
+    }
   });
 
   grunt.loadNpmTasks('grunt-contrib-uglify');
@@ -86,33 +98,32 @@ module.exports = function(grunt) {
   // Main grunt tasks
   ////////////////////////////////////////////////////
 
-  // grunt.registerTask('eslint', [
-  //   'eslint'
-  // ]);
-
   grunt.registerTask('test', [
     'mochaTest'
   ]);
 
-  // grunt.registerTask('concat', [
-  //   'concat'
-  // ]);  
 
   grunt.registerTask('build', [
     'concat', 'eslint', 'uglify', 'test'
   ]);
 
+
   grunt.registerTask('upload', function(n) {
     if (grunt.option('prod')) {
-      // add your production server task here
+      // add your production server task here (grunt deploy --prod)
+
     } else {
       grunt.task.run([ 'server-dev' ]);
     }
   });
 
-  grunt.registerTask('deploy', [
-    // add your deploy tasks here
-  ]);
 
+  grunt.registerTask('deploy', function(n) {
+    if (grunt.option('prod')) {
+      grunt.task.run(['shell:add', 'shell:commit', 'shell:push']);
+    } else {
+      grunt.task.run(['build', 'nodemon']);
+    }
+  });
 
 };
