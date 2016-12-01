@@ -26,6 +26,7 @@ module.exports = function(grunt) {
     eslint: {
       target: [
         // Add list of files to lint here
+        'server.js'
       ]
     },
 
@@ -71,6 +72,10 @@ module.exports = function(grunt) {
   ////////////////////////////////////////////////////
   // Main grunt tasks
   ////////////////////////////////////////////////////
+
+  grunt.registerTask('eslint', [
+    'eslint'
+  ]);
 
   grunt.registerTask('test', [
     'mochaTest'
